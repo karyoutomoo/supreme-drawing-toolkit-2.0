@@ -13,6 +13,9 @@ namespace DrawingToolkit
 {
     public partial class DrawingCanvas : Form
     {
+        private IToolbox toolbox;
+        private ICanvas canvas;
+
         public bool draw = false;
         public bool drag = false;
 
@@ -30,13 +33,22 @@ namespace DrawingToolkit
 
         public Pen pen = new Pen(Color.Black, 5);
         public Graphics graphics;
-     
+        public Graphics[] ArrayOfGraphics;
+
+        Rectangle rec = new Rectangle(0, 0, 0, 0);
+
         public DrawingCanvas()
         {
             InitializeComponent();
+            InitForm();
             graphics = panel1.CreateGraphics();
+            this.DoubleBuffered = true;
         }
         
+        private void InitForm()
+        {
+            //ToolInit
+        }
 
         private void groupBox1_Enter(object sender, EventArgs e)
         {
@@ -102,6 +114,41 @@ namespace DrawingToolkit
                         oldPoint = currentPoint;
                     }
                 }
+
+                else if (currentDrawingTool == 2)
+                {
+                    //circle
+                    //rectangle
+                    point1 = oldPoint;
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        point2 = e.Location;
+                    }
+
+                    point3 = new Point(point1.X, point2.Y);
+                    point4 = new Point(point2.X, point1.Y);
+                    
+                    int width = Math.Abs(point2.X - point3.X);
+                    int height = Math.Abs(point4.Y - point2.Y);
+
+                    Debug.WriteLine("Point 1 :" + point1);
+                    Debug.WriteLine("Point 2 :" + point2);
+                    Debug.WriteLine("Point 3 :" + point3);
+                    Debug.WriteLine("Point 4 :" + point4);
+
+                    Debug.WriteLine("width :" + width);
+                    Debug.WriteLine("height :" + height);
+
+                    int[] minX = new[] { point1.X, point2.X, point3.X, point4.X };
+                    int[] minY = new[] { point1.Y, point2.Y, point3.Y, point4.Y };
+
+                    int mX = minX.Min();
+                    int mY = minY.Min();
+
+                    Rectangle rectangle = new Rectangle(mX, mY, width, height);
+                    graphics.DrawEllipse(pen, rectangle);
+                }
+
                 else if (currentDrawingTool == 3)
                 {
                     //rectangle
@@ -125,35 +172,34 @@ namespace DrawingToolkit
                     Debug.WriteLine("width :" + width);
                     Debug.WriteLine("height :" + height);
 
-                    Rectangle rectangle = new Rectangle(point1.X, point1.Y, width, height);
+                    int[] minX = new[] { point1.X, point2.X, point3.X, point4.X };
+                    int[] minY = new[] { point1.Y, point2.Y, point3.Y, point4.Y };
+
+                    int mX = minX.Min();
+                    int mY = minY.Min();
+
+                    Rectangle rectangle = new Rectangle(mX, mY, width, height);
 
                     graphics.DrawRectangle(pen, rectangle);
                 }
-                else if (currentDrawingTool == 2)
-                {
-                    //circle
-                    point1 = oldPoint;
-                    if (e.Button == MouseButtons.Left)
-                    {
-                        point2 = e.Location;
-                    }
-                    point4 = new Point(point2.X, point1.Y);
-                    point3 = new Point(point1.X, point2.Y);
+            }
+        }
 
-                    int width = point2.X - point3.X;
-                    int height = point4.Y - point2.Y;
-
-                    Debug.WriteLine("Point 1 :" + point1);
-                    Debug.WriteLine("Point 2 :" + point2);
-                    Debug.WriteLine("Point 3 :" + point3);
-                    Debug.WriteLine("Point 4 :" + point4);
-
-                    Debug.WriteLine("width :" + width);
-                    Debug.WriteLine("height :" + height);
-
-                    Rectangle rect = new Rectangle(point1.X, point1.Y, width, height);
-                    graphics.DrawEllipse(pen, rect);
-                }
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Rectangle rec = new Rectangle(e.X, e.Y, 0, 0);
+                Invalidate();
+            }
+        }
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                rec.Width = e.X - rec.X;
+                rec.Height = e.Y - rec.Y;
+                Invalidate();
             }
         }
 
