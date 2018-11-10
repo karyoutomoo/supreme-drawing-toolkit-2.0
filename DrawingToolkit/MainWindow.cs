@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows.Forms;
+using DrawingToolkit.Tools;
 
 namespace DrawingToolkit
 {
@@ -19,10 +20,10 @@ namespace DrawingToolkit
         public bool draw = false;
         public bool drag = false;
 
-        public int currentDrawingTool=1;
+        public int currentDrawingTool = 1;
 
-        private int loop=0;
-    
+        private int loop = 0;
+
         public Point currentPoint = new Point();
         public Point oldPoint = new Point();
 
@@ -33,9 +34,9 @@ namespace DrawingToolkit
 
         public Pen pen = new Pen(Color.Black, 5);
         public Graphics graphics;
-        public Graphics[] ArrayOfGraphics;
+        List<DrawingObject> _objects = new List<DrawingObject>();
 
-        Rectangle rec = new Rectangle(0, 0, 0, 0);
+        Tools.Rectangle rec = new Tools.Rectangle(0, 0, 0, 0);
 
         public DrawingCanvas()
         {
@@ -44,7 +45,7 @@ namespace DrawingToolkit
             graphics = panel1.CreateGraphics();
             this.DoubleBuffered = true;
         }
-        
+
         private void InitForm()
         {
             //ToolInit
@@ -89,7 +90,7 @@ namespace DrawingToolkit
                 loop++;
             }
 
-           drag = true;
+            drag = true;
         }
 
         private void panel1_MouseUp(object sender, MouseEventArgs e)
@@ -111,42 +112,12 @@ namespace DrawingToolkit
                     if (e.Button == MouseButtons.Left)
                     {
                         graphics.DrawLine(pen, currentPoint, oldPoint);
+                        Line line = new Line(currentPoint, oldPoint);
+                        _objects.Add(line);
                         oldPoint = currentPoint;
+                        Debug.WriteLine("jml object :" + _objects.Count);
                     }
-                }
-
-                else if (currentDrawingTool == 2)
-                {
-                    //circle
-                    //rectangle
-                    point1 = oldPoint;
-                    if (e.Button == MouseButtons.Left)
-                    {
-                        point2 = e.Location;
-                    }
-
-                    point3 = new Point(point1.X, point2.Y);
-                    point4 = new Point(point2.X, point1.Y);
                     
-                    int width = Math.Abs(point2.X - point3.X);
-                    int height = Math.Abs(point4.Y - point2.Y);
-
-                    Debug.WriteLine("Point 1 :" + point1);
-                    Debug.WriteLine("Point 2 :" + point2);
-                    Debug.WriteLine("Point 3 :" + point3);
-                    Debug.WriteLine("Point 4 :" + point4);
-
-                    Debug.WriteLine("width :" + width);
-                    Debug.WriteLine("height :" + height);
-
-                    int[] minX = new[] { point1.X, point2.X, point3.X, point4.X };
-                    int[] minY = new[] { point1.Y, point2.Y, point3.Y, point4.Y };
-
-                    int mX = minX.Min();
-                    int mY = minY.Min();
-
-                    Rectangle rectangle = new Rectangle(mX, mY, width, height);
-                    graphics.DrawEllipse(pen, rectangle);
                 }
 
                 else if (currentDrawingTool == 3)
@@ -178,10 +149,49 @@ namespace DrawingToolkit
                     int mX = minX.Min();
                     int mY = minY.Min();
 
-                    Rectangle rectangle = new Rectangle(mX, mY, width, height);
-
-                    graphics.DrawRectangle(pen, rectangle);
+                    Tools.Rectangle rectangle = new Tools.Rectangle(mX, mY, width, height);
+                    _objects.Add(rectangle);
+                    graphics.DrawRectangle(pen, mX, mY, width, height);
+                    Debug.WriteLine("jml object :" + _objects.Count);
                 }
+                
+
+                else if (currentDrawingTool == 2)
+                {
+                    //circle
+                    //rectangle
+                    point1 = oldPoint;
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        point2 = e.Location;
+                    }
+
+                    point3 = new Point(point1.X, point2.Y);
+                    point4 = new Point(point2.X, point1.Y);
+
+                    int width = Math.Abs(point2.X - point3.X);
+                    int height = Math.Abs(point4.Y - point2.Y);
+
+                    Debug.WriteLine("Point 1 :" + point1);
+                    Debug.WriteLine("Point 2 :" + point2);
+                    Debug.WriteLine("Point 3 :" + point3);
+                    Debug.WriteLine("Point 4 :" + point4);
+
+                    Debug.WriteLine("width :" + width);
+                    Debug.WriteLine("height :" + height);
+
+                    int[] minX = new[] { point1.X, point2.X, point3.X, point4.X };
+                    int[] minY = new[] { point1.Y, point2.Y, point3.Y, point4.Y };
+
+                    int mX = minX.Min();
+                    int mY = minY.Min();
+
+                    Tools.Rectangle rectangle = new Tools.Rectangle(mX, mY, width, height);
+                    _objects.Add(rectangle);
+                    graphics.DrawEllipse(pen, mX, mY, width, height);
+                    Debug.WriteLine("jml object :" + _objects.Count);
+                }
+                Invalidate();
             }
         }
 
@@ -189,7 +199,7 @@ namespace DrawingToolkit
         {
             if (e.Button == MouseButtons.Left)
             {
-                Rectangle rec = new Rectangle(e.X, e.Y, 0, 0);
+                Tools.Rectangle rec = new Tools.Rectangle(e.X, e.Y, 0, 0);
                 Invalidate();
             }
         }
@@ -197,8 +207,8 @@ namespace DrawingToolkit
         {
             if (e.Button == MouseButtons.Left)
             {
-                rec.Width = e.X - rec.X;
-                rec.Height = e.Y - rec.Y;
+                rec.Width = e.X - rec.mX;
+                rec.Height = e.Y - rec.mY;
                 Invalidate();
             }
         }
@@ -210,12 +220,43 @@ namespace DrawingToolkit
 
         private void button1_Click(object sender, EventArgs e)
         {
+            _objects.Clear();
             panel1.Invalidate();
+            Debug.WriteLine("jml object setelah CLEAR :" + _objects.Count);
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
+            base.OnPaint(e);
+            foreach (var o in _objects)
+            {
+                o.DrawObject(e.Graphics);
+                Debug.WriteLine("redrawing");
+            }
+        }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void button3_MouseClick(object sender, MouseEventArgs e)
+        {
+            int lastObject = _objects.Count - 1;
+            if(lastObject > -1)
+            {
+                _objects.RemoveAt(lastObject);
+                
+                Debug.WriteLine("UNDO");
+                Debug.WriteLine("jml object setelah UNDO :" + _objects.Count);
+                Refresh();
+            }
+        }
+
+        private void button2_MouseClick(object sender, MouseEventArgs e)
+        {
+            currentDrawingTool = 4;
+            Debug.WriteLine("Select");
         }
     }
 }
