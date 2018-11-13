@@ -10,5 +10,6 @@ namespace DrawingToolkit
     public abstract class DrawingObject
     {
         public abstract void DrawObject(Graphics g);
+        public abstract bool Intersect(int xTest, int yTest);
     }
 }

@@ -18,9 +18,10 @@ namespace DrawingToolkit
         private ICanvas canvas;
 
         public bool draw = false;
-        public bool drag = false;
-
+        public bool select = false;
+        
         public int currentDrawingTool = 1;
+        DrawingObject selectedObject;
 
         private int loop = 0;
 
@@ -68,16 +69,19 @@ namespace DrawingToolkit
 
         private void LineTool_Click(object sender, EventArgs e)
         {
+            draw = true;
             currentDrawingTool = 1;
         }
 
         private void CircleTool_Click(object sender, EventArgs e)
         {
+            draw = true;
             currentDrawingTool = 2;
         }
 
         private void RectangleTool_Click(object sender, EventArgs e)
         {
+            draw = true;
             currentDrawingTool = 3;
         }
 
@@ -90,7 +94,16 @@ namespace DrawingToolkit
                 loop++;
             }
 
-            drag = true;
+            if (select == true)
+            {
+                foreach (DrawingObject obj in _objects)
+                {
+                    if (obj.Intersect(e.X, e.Y))
+                    {
+                        selectedObject = obj;
+                    }
+                }
+            }
         }
 
         private void panel1_MouseUp(object sender, MouseEventArgs e)
@@ -159,7 +172,6 @@ namespace DrawingToolkit
                 else if (currentDrawingTool == 2)
                 {
                     //circle
-                    //rectangle
                     point1 = oldPoint;
                     if (e.Button == MouseButtons.Left)
                     {
@@ -186,8 +198,8 @@ namespace DrawingToolkit
                     int mX = minX.Min();
                     int mY = minY.Min();
 
-                    Tools.Rectangle rectangle = new Tools.Rectangle(mX, mY, width, height);
-                    _objects.Add(rectangle);
+                    Tools.Ellipse ellipse = new Tools.Ellipse(mX, mY, width, height);
+                    _objects.Add(ellipse);
                     graphics.DrawEllipse(pen, mX, mY, width, height);
                     Debug.WriteLine("jml object :" + _objects.Count);
                 }
@@ -239,24 +251,26 @@ namespace DrawingToolkit
         {
             
         }
-
-        private void button3_MouseClick(object sender, MouseEventArgs e)
+        
+        private void button3_Click_1(object sender, EventArgs e)
         {
             int lastObject = _objects.Count - 1;
-            if(lastObject > -1)
+            if (lastObject > -1)
             {
                 _objects.RemoveAt(lastObject);
-                
+
                 Debug.WriteLine("UNDO");
                 Debug.WriteLine("jml object setelah UNDO :" + _objects.Count);
                 Refresh();
             }
         }
 
-        private void button2_MouseClick(object sender, MouseEventArgs e)
+        private void button2_Click_2(object sender, EventArgs e)
         {
+            draw = false;
             currentDrawingTool = 4;
-            Debug.WriteLine("Select");
+            select = true;
+            Debug.WriteLine("S E L E C T ");
         }
     }
 }

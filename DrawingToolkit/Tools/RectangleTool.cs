@@ -10,6 +10,7 @@ namespace DrawingToolkit.Tools
 {
     public class Rectangle : DrawingObject
     {
+        private const double EPSILON = 3.0;
         public Pen pen = new Pen(Color.Black, 5);
         public int mX { get; set; }
         public int mY { get; set; }
@@ -23,11 +24,21 @@ namespace DrawingToolkit.Tools
             this.Width = width;
             this.Height = height;
         }
-        
+
         public override void DrawObject(Graphics g)
         {
             Debug.WriteLine("Drawing A Rectangle");
-            g.DrawRectangle(pen,mX,mY,Width,Height);
+            g.DrawRectangle(pen, mX, mY, Width, Height);
+        }
+
+        public override bool Intersect(int xTest, int yTest)
+        {
+            if ((xTest >= mX && xTest <= mX + Width) && (yTest >= mY && yTest <= mY + Height))
+            {
+                Debug.WriteLine("Object " + "rectangle" + " is selected.");
+                return true;
+            }
+            return false;
         }
     }
 }
