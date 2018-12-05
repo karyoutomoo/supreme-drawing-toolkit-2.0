@@ -75,6 +75,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -88,6 +89,30 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\icons8-0-percent-80.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\icons8-cursor-64 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\icons8-erase-50.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\icons8-line-64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\icons8-rectangular-80.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\icons8-redo-64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\icons8-undo-64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\icons8-line-32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

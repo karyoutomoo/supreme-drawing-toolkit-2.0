@@ -51,12 +51,27 @@ namespace DrawingToolkit.Tools
             if(color == 1)
             {
                 this.pen.Color = Color.Black;
+                g.DrawRectangle(this.pen, mX, mY, Width, Height);
             }
             else if(color == 2)
             {
                 this.pen.Color = Color.Red;
+                g.DrawRectangle(this.pen, mX, mY, Width, Height);
+                //DRAG POINTS UP
+                Debug.WriteLine("Dragpoint UP");
+                g.DrawRectangle(this.pen, mX, mY, 5,5);
+                g.DrawRectangle(this.pen, mX + 1, mY, 3, 3);
+                g.DrawRectangle(this.pen, mX + 2, mY, 3, 3);
+                //DRAG POINTS MID
+                Debug.WriteLine("Dragpoint MID");
+                g.DrawRectangle(this.pen, mX, mY+1, 3, 3);
+                g.DrawRectangle(this.pen, mX+2, mY+1, 3, 3);
+                //DRAG POINTS END
+                Debug.WriteLine("Dragpoint END");
+                g.DrawRectangle(this.pen, mX, mY+2, 3, 3);
+                g.DrawRectangle(this.pen, mX+1, mY+2, 3, 3);
+                g.DrawRectangle(this.pen, mX+2, mY+2, 5,5);
             }
-            g.DrawRectangle(this.pen, mX, mY, Width, Height);
         }
     }
 }
