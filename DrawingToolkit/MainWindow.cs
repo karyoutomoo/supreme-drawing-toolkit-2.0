@@ -19,12 +19,13 @@ namespace DrawingToolkit
 
         public bool draw = false;
         public bool select = false;
-        
+        public bool undo = false;
+
         public int currentDrawingTool = 1;
-        DrawingObject selectedObject;
+        DrawingObject selectedObject, deselectedObject;
 
         private int loop = 0;
-
+        public int toRedo = 0;
         public Point currentPoint = new Point();
         public Point oldPoint = new Point();
 
@@ -35,7 +36,9 @@ namespace DrawingToolkit
 
         public Pen pen = new Pen(Color.Black, 5);
         public Graphics graphics;
+
         List<DrawingObject> _objects = new List<DrawingObject>();
+        List<DrawingObject> _fullobjects = new List<DrawingObject>();
 
         Tools.Rectangle rec = new Tools.Rectangle(0, 0, 0, 0);
 
@@ -64,25 +67,28 @@ namespace DrawingToolkit
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-
+            select = false;
         }
 
         private void LineTool_Click(object sender, EventArgs e)
         {
             draw = true;
             currentDrawingTool = 1;
+            select = false;
         }
 
         private void CircleTool_Click(object sender, EventArgs e)
         {
             draw = true;
             currentDrawingTool = 2;
+            select = false;
         }
 
         private void RectangleTool_Click(object sender, EventArgs e)
         {
             draw = true;
             currentDrawingTool = 3;
+            select = false;
         }
 
         private void panel1_MouseDown(object sender, MouseEventArgs e)
@@ -101,9 +107,17 @@ namespace DrawingToolkit
                     if (obj.Intersect(e.X, e.Y))
                     {
                         selectedObject = obj;
+                        obj.RenderOnPreview(graphics, 2);
+                    }
+                    else
+                    {
+                        deselectedObject = obj;
+                        obj.RenderOnPreview(graphics, 1);
                     }
                 }
             }
+            panel1.Invalidate();
+            Refresh();
         }
 
         private void panel1_MouseUp(object sender, MouseEventArgs e)
@@ -127,10 +141,11 @@ namespace DrawingToolkit
                         graphics.DrawLine(pen, currentPoint, oldPoint);
                         Line line = new Line(currentPoint, oldPoint);
                         _objects.Add(line);
+                        _fullobjects.Add(line);
                         oldPoint = currentPoint;
                         Debug.WriteLine("jml object :" + _objects.Count);
                     }
-                    
+
                 }
 
                 else if (currentDrawingTool == 3)
@@ -164,10 +179,11 @@ namespace DrawingToolkit
 
                     Tools.Rectangle rectangle = new Tools.Rectangle(mX, mY, width, height);
                     _objects.Add(rectangle);
+                    _fullobjects.Add(rectangle);
                     graphics.DrawRectangle(pen, mX, mY, width, height);
                     Debug.WriteLine("jml object :" + _objects.Count);
                 }
-                
+
 
                 else if (currentDrawingTool == 2)
                 {
@@ -200,6 +216,7 @@ namespace DrawingToolkit
 
                     Tools.Ellipse ellipse = new Tools.Ellipse(mX, mY, width, height);
                     _objects.Add(ellipse);
+                    _fullobjects.Add(ellipse);
                     graphics.DrawEllipse(pen, mX, mY, width, height);
                     Debug.WriteLine("jml object :" + _objects.Count);
                 }
@@ -233,6 +250,7 @@ namespace DrawingToolkit
         private void button1_Click(object sender, EventArgs e)
         {
             _objects.Clear();
+            _fullobjects.Clear();
             panel1.Invalidate();
             Debug.WriteLine("jml object setelah CLEAR :" + _objects.Count);
         }
@@ -249,28 +267,84 @@ namespace DrawingToolkit
 
         private void button2_Click(object sender, EventArgs e)
         {
-            
+
         }
-        
+
         private void button3_Click_1(object sender, EventArgs e)
         {
-            int lastObject = _objects.Count - 1;
-            if (lastObject > -1)
+            int lastObjectPosition = _objects.Count - 1;
+            if (lastObjectPosition > -1)
             {
-                _objects.RemoveAt(lastObject);
-
+                _objects.RemoveAt(lastObjectPosition);
+                toRedo = lastObjectPosition;
                 Debug.WriteLine("UNDO");
                 Debug.WriteLine("jml object setelah UNDO :" + _objects.Count);
+                undo = true;
                 Refresh();
             }
         }
 
         private void button2_Click_2(object sender, EventArgs e)
         {
-            draw = false;
+            draw = false; select = false;
             currentDrawingTool = 4;
             select = true;
             Debug.WriteLine("S E L E C T ");
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            select = false;
+            if (undo = true)
+            {
+                int lastObjectPosition = _objects.Count - 1;
+                if (lastObjectPosition < _fullobjects.Count && lastObjectPosition > -1 && _fullobjects[lastObjectPosition + 1] != null)
+                {
+                    _objects.Add(_fullobjects[lastObjectPosition + 1]);
+                    Refresh();
+                    Debug.WriteLine("REDO");
+                    Debug.WriteLine("jml object setelah REDO :" + _objects.Count);
+                }
+                else if (_objects.Count == 0)
+                {
+                    _objects.Add(_fullobjects[0]);
+                    Refresh();
+                    Debug.WriteLine("REDO");
+                    Debug.WriteLine("jml object setelah REDO :" + _objects.Count);
+                }
+                else Debug.WriteLine("Out of bounds!");
+            }
+            undo = false;
+        }
+
+        private void DrawControlBorder(int x, int y, int w, int h)
+        {
+            int DRAG_HANDLE_SIZE = 2;
+            //define the 8 drag handles, that has the size of DRAG_HANDLE_SIZE
+            System.Drawing.Rectangle one = new System.Drawing.Rectangle(
+                new Point(x, y),
+                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
+            System.Drawing.Rectangle two = new System.Drawing.Rectangle(
+                new Point(x + w / 2, y),
+                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
+            System.Drawing.Rectangle three = new System.Drawing.Rectangle(
+                new Point(x + w, y),
+                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
+            System.Drawing.Rectangle four = new System.Drawing.Rectangle(
+                new Point(x, y + h / 2),
+                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
+            System.Drawing.Rectangle five = new System.Drawing.Rectangle(
+                new Point(x + w, y + h / 2),
+                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
+            System.Drawing.Rectangle six = new System.Drawing.Rectangle(
+                new Point(x, y + h),
+                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
+            System.Drawing.Rectangle seven = new System.Drawing.Rectangle(
+                new Point(x + w / 2, y + h),
+                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
+            System.Drawing.Rectangle eight = new System.Drawing.Rectangle(
+                new Point(x + w, y + h),
+                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
         }
     }
 }

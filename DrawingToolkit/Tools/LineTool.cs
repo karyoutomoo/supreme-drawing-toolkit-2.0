@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DrawingToolkit.Tools
 {
@@ -44,6 +46,20 @@ namespace DrawingToolkit.Tools
         {
             double m = (double)(currentPoint.Y - oldPoint.Y) / (double)(currentPoint.X - oldPoint.X);
             return m;
+        }
+
+        public override void RenderOnPreview(Graphics graphics, int color)
+        {
+            /*pen.Color = Color.Red;
+            pen.Width = 1.5f;
+            pen.DashStyle = DashStyle.DashDotDot;
+
+            if (this.GetGraphics() != null)
+            {
+                this.GetGraphics().SmoothingMode = SmoothingMode.AntiAlias;
+                this.GetGraphics().DrawLine(pen, this.Startpoint, this.Endpoint);
+
+            }*/
         }
     }
 

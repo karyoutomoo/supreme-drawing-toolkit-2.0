@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DrawingToolkit.Tools
 {
@@ -16,6 +17,8 @@ namespace DrawingToolkit.Tools
         public int mY { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        bool dragging = false;
+        System.Drawing.Rectangle areaRect;
 
         public Rectangle(int mX, int mY, int width, int height)
         {
@@ -28,7 +31,8 @@ namespace DrawingToolkit.Tools
         public override void DrawObject(Graphics g)
         {
             Debug.WriteLine("Drawing A Rectangle");
-            g.DrawRectangle(pen, mX, mY, Width, Height);
+            areaRect = new System.Drawing.Rectangle(mX, mY, Width, Height);
+            g.DrawRectangle(pen, areaRect);
         }
 
         public override bool Intersect(int xTest, int yTest)
@@ -39,6 +43,20 @@ namespace DrawingToolkit.Tools
                 return true;
             }
             return false;
+        }
+        
+
+        public override void RenderOnPreview(Graphics g, int color)
+        {
+            if(color == 1)
+            {
+                this.pen.Color = Color.Black;
+            }
+            else if(color == 2)
+            {
+                this.pen.Color = Color.Red;
+            }
+            g.DrawRectangle(this.pen, mX, mY, Width, Height);
         }
     }
 }

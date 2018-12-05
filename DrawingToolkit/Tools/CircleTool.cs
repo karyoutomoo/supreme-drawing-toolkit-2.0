@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DrawingToolkit.Tools
 {
@@ -39,5 +40,11 @@ namespace DrawingToolkit.Tools
             }
             return false;
         }
+
+        public override void RenderOnPreview(Graphics graphics, int color)
+        {
+            
+        }
+
     }
 }
