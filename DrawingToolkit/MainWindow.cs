@@ -110,9 +110,11 @@ namespace DrawingToolkit
                         selectedObject.DrawHandle(graphics);
                         ClickPosition = selectedObject.GetClickHandle(e.Location);
                         System.Diagnostics.Debug.WriteLine(ClickPosition);
+                        Cursor = Cursors.Cross;
                     }
                     else
                     {
+                        Cursor = Cursors.Default;
                         selectedObject = null;
                         obj.RenderOnPreview(graphics, 1);
                     }
@@ -123,32 +125,27 @@ namespace DrawingToolkit
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
             point2 = e.Location;
-            
         }
 
         private void panel1_MouseUp(object sender, MouseEventArgs e)
         {
             draw = false;
-            if (selectedObject != null && select == true && draw == false)
+            if (selectedObject != null && select == true && ClickPosition==-1)
             {
-                if (ClickPosition != -1)
-                {
-                    selectedObject.Resize(ClickPosition, e.Location);
-                    System.Diagnostics.Debug.WriteLine("RESIZING");
-                    selectedObject.DrawObject(graphics);
-                    selectedObject.RenderOnPreview(graphics, 2);
-                    selectedObject.DrawHandle(graphics);
-                }
-                else
-                {
-                    selectedObject.Translate(e.X - oldPoint.X, e.Y - oldPoint.Y);
-                    System.Diagnostics.Debug.WriteLine("TRANSLATING");
-                    panel1.Refresh();
-                    oldPoint = e.Location;
-                    selectedObject.DrawObject(graphics);
-                    selectedObject.RenderOnPreview(graphics, 2);
-                    selectedObject.DrawHandle(graphics);
-                }
+                selectedObject.Translate(e.X - oldPoint.X, e.Y - oldPoint.Y);
+                System.Diagnostics.Debug.WriteLine("TRANSLATING");
+                panel1.Refresh();
+                oldPoint = e.Location;
+                selectedObject.DrawObject(graphics);
+                selectedObject.RenderOnPreview(graphics, 2);
+                selectedObject.DrawHandle(graphics);
+            }
+            else if(selectedObject != null && select == true && ClickPosition != -1)
+            {
+                selectedObject.Resize(ClickPosition, e.Location);
+                System.Diagnostics.Debug.WriteLine("MASOK RESIZING");
+                panel1.Refresh();
+                selectedObject.RenderOnPreview(graphics, 2);
             }
         }
 
@@ -248,6 +245,10 @@ namespace DrawingToolkit
                     Debug.WriteLine("jml object :" + _objects.Count);
                 }
                 Invalidate();
+            }
+            else
+            {
+                
             }
         }
 

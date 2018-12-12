@@ -29,7 +29,7 @@ namespace DrawingToolkit
         public abstract bool Intersect(int xTest, int yTest);
         public abstract void RenderOnPreview(Graphics graphics, int color);
         public abstract void Translate(int difX, int difY);
-        public abstract void Resize(int posisiClick, Point posisi);
+        public abstract void Resize(int ClickPosition, Point position);
 
         public virtual void SetGraphics(Graphics graphics)
         {
