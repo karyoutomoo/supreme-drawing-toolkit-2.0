@@ -13,25 +13,26 @@ namespace DrawingToolkit.Tools
     public class Line : DrawingObject
     {
         private const double EPSILON = 3.0;
-        public Point currentPoint { get; set; }
-        public Point oldPoint { get; set; }
+        public Point point2 { get; set; }
+        public Point point1 { get; set; }
+        private Pen pen = new Pen(Color.Black, 3);
 
-        public Line(Point currentPoint, Point oldPoint)
+        public Line(Point point2, Point point1)
         {
-            this.currentPoint = currentPoint;
-            this.oldPoint = oldPoint;
+            this.point2 = point2;
+            this.point1 = point1;
         }
 
         public override void DrawObject(Graphics g)
         {
-            g.DrawLine(new Pen(Color.Black, 5), currentPoint, oldPoint);
+            g.DrawLine(pen, point2, point1);
             Debug.WriteLine("Drawing A Line");
         }
 
         public override bool Intersect(int xTest, int yTest)
         {
             double m = GetSlope();
-            double b = currentPoint.Y - m * currentPoint.X;
+            double b = point2.Y - m * point2.X;
             double y_point = m * xTest + b;
 
             if (Math.Abs(yTest - y_point) < EPSILON)
@@ -44,22 +45,88 @@ namespace DrawingToolkit.Tools
 
         public double GetSlope()
         {
-            double m = (double)(currentPoint.Y - oldPoint.Y) / (double)(currentPoint.X - oldPoint.X);
+            double m = (double)(point2.Y - point1.Y) / (double)(point2.X - point1.X);
             return m;
         }
 
-        public override void RenderOnPreview(Graphics graphics, int color)
+        public override void RenderOnPreview(Graphics g, int color)
         {
-            /*pen.Color = Color.Red;
-            pen.Width = 1.5f;
-            pen.DashStyle = DashStyle.DashDotDot;
-
-            if (this.GetGraphics() != null)
+            if (color == 1)
             {
-                this.GetGraphics().SmoothingMode = SmoothingMode.AntiAlias;
-                this.GetGraphics().DrawLine(pen, this.Startpoint, this.Endpoint);
+                this.pen.Color = Color.Black;
+                g.DrawLine(this.pen, point1, point2);
+            }
+            else if (color == 2)
+            {
+                this.pen.Color = Color.Red;
+                g.DrawLine(this.pen, point1, point2);
+                DrawHandle(g);
+            }
+        }
 
-            }*/
+        public override void DrawEdit()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DrawStatic()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DrawHandle(Graphics g)
+        {
+            for (int i = 1; i < 3; i++)
+            {
+                Point point = GetHandlePoint(i);
+                point.Offset(-2, -2);
+                System.Drawing.Rectangle rect = new System.Drawing.Rectangle(point.X, point.Y, 5, 5);
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.DrawRectangle(pen, rect);
+            }
+        }
+
+        public override Point GetHandlePoint(int value)
+        {
+            Point result = Point.Empty;
+            if (value == 1)//pojok kiri
+                result = new Point(point1.X, point1.Y);
+            else if (value == 2)//bawah kiri
+                result = new Point(point2.X, point2.Y);
+            return result;
+        }
+
+        public override int GetClickHandle(Point posisi)
+        {
+            for (int i = 1; i < 3; i++)
+            {
+                Point point = GetHandlePoint(i);
+                point.Offset(-2, -2);
+                if ((posisi.X >= point.X && posisi.X <= point.X + 5) && (posisi.Y >= point.Y && posisi.Y <= point.Y + 5))
+                {
+                    System.Diagnostics.Debug.WriteLine("Berubah" + i);
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public override void Translate(int difX, int difY)
+        {
+            this.point1 = new Point(this.point1.X + difX, this.point1.Y + difY);
+            this.point2 = new Point(this.point2.X + difX, this.point2.Y + difY);
+        }
+
+        public override void Resize(int posisiClick, Point posisi)
+        {
+            if (posisiClick == 1)//pojok kiri
+            {
+                this.point1 = posisi;
+            }
+            else if (posisiClick == 2)//bawah kiri
+            {
+                this.point2 = posisi;
+            }
         }
     }
 

@@ -14,15 +14,12 @@ namespace DrawingToolkit
 {
     public partial class DrawingCanvas : Form
     {
-        private IToolbox toolbox;
-        private ICanvas canvas;
-
         public bool draw = false;
         public bool select = false;
         public bool undo = false;
 
         public int currentDrawingTool = 1;
-        DrawingObject selectedObject, deselectedObject;
+        DrawingObject selectedObject;
 
         private int loop = 0;
         public int toRedo = 0;
@@ -34,13 +31,12 @@ namespace DrawingToolkit
         public Point point3 = new Point();
         public Point point4 = new Point();
 
-        public Pen pen = new Pen(Color.Black, 5);
+        public Pen pen = new Pen(Color.Black, 3);
         public Graphics graphics;
 
         List<DrawingObject> _objects = new List<DrawingObject>();
         List<DrawingObject> _fullobjects = new List<DrawingObject>();
 
-        Tools.Rectangle rec = new Tools.Rectangle(0, 0, 0, 0);
 
         public DrawingCanvas()
         {
@@ -107,11 +103,10 @@ namespace DrawingToolkit
                     if (obj.Intersect(e.X, e.Y))
                     {
                         selectedObject = obj;
-                        obj.RenderOnPreview(graphics, 2);
+                        selectedObject.RenderOnPreview(graphics, 2);
                     }
                     else
                     {
-                        deselectedObject = obj;
                         obj.RenderOnPreview(graphics, 1);
                     }
                 }
@@ -176,8 +171,8 @@ namespace DrawingToolkit
 
                     int mX = minX.Min();
                     int mY = minY.Min();
-
-                    Tools.Rectangle rectangle = new Tools.Rectangle(mX, mY, width, height);
+                    point1 = new Point(mX,mY);
+                    Tools.Rectangle rectangle = new Tools.Rectangle(point1,point2);
                     _objects.Add(rectangle);
                     _fullobjects.Add(rectangle);
                     graphics.DrawRectangle(pen, mX, mY, width, height);
@@ -213,8 +208,8 @@ namespace DrawingToolkit
 
                     int mX = minX.Min();
                     int mY = minY.Min();
-
-                    Tools.Ellipse ellipse = new Tools.Ellipse(mX, mY, width, height);
+                    point1 = new Point(mX, mY);
+                    Tools.Ellipse ellipse = new Tools.Ellipse(point1,point2);
                     _objects.Add(ellipse);
                     _fullobjects.Add(ellipse);
                     graphics.DrawEllipse(pen, mX, mY, width, height);
@@ -228,17 +223,14 @@ namespace DrawingToolkit
         {
             if (e.Button == MouseButtons.Left)
             {
-                Tools.Rectangle rec = new Tools.Rectangle(e.X, e.Y, 0, 0);
-                Invalidate();
+                
             }
         }
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                rec.Width = e.X - rec.mX;
-                rec.Height = e.Y - rec.mY;
-                Invalidate();
+                
             }
         }
 
@@ -315,36 +307,6 @@ namespace DrawingToolkit
                 else Debug.WriteLine("Out of bounds!");
             }
             undo = false;
-        }
-
-        private void DrawControlBorder(int x, int y, int w, int h)
-        {
-            int DRAG_HANDLE_SIZE = 2;
-            //define the 8 drag handles, that has the size of DRAG_HANDLE_SIZE
-            System.Drawing.Rectangle one = new System.Drawing.Rectangle(
-                new Point(x, y),
-                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
-            System.Drawing.Rectangle two = new System.Drawing.Rectangle(
-                new Point(x + w / 2, y),
-                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
-            System.Drawing.Rectangle three = new System.Drawing.Rectangle(
-                new Point(x + w, y),
-                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
-            System.Drawing.Rectangle four = new System.Drawing.Rectangle(
-                new Point(x, y + h / 2),
-                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
-            System.Drawing.Rectangle five = new System.Drawing.Rectangle(
-                new Point(x + w, y + h / 2),
-                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
-            System.Drawing.Rectangle six = new System.Drawing.Rectangle(
-                new Point(x, y + h),
-                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
-            System.Drawing.Rectangle seven = new System.Drawing.Rectangle(
-                new Point(x + w / 2, y + h),
-                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
-            System.Drawing.Rectangle eight = new System.Drawing.Rectangle(
-                new Point(x + w, y + h),
-                new Size(DRAG_HANDLE_SIZE, DRAG_HANDLE_SIZE));
         }
     }
 }

@@ -46,7 +46,7 @@ namespace DrawingToolkit
             // 
             // LineTool
             // 
-            this.LineTool.BackColor = System.Drawing.Color.Red;
+            this.LineTool.BackColor = System.Drawing.Color.White;
             this.LineTool.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.LineTool.Cursor = System.Windows.Forms.Cursors.Default;
             this.LineTool.Image = global::DrawingToolkit.Properties.Resources.icons8_line_32;
@@ -60,7 +60,7 @@ namespace DrawingToolkit
             // 
             // CircleTool
             // 
-            this.CircleTool.BackColor = System.Drawing.Color.Red;
+            this.CircleTool.BackColor = System.Drawing.Color.White;
             this.CircleTool.BackgroundImage = global::DrawingToolkit.Properties.Resources.icons8_0_percent_80;
             this.CircleTool.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CircleTool.Image = global::DrawingToolkit.Properties.Resources.icons8_0_percent_80;
@@ -74,7 +74,7 @@ namespace DrawingToolkit
             // 
             // DrawingTools
             // 
-            this.DrawingTools.BackColor = System.Drawing.Color.Red;
+            this.DrawingTools.BackColor = System.Drawing.Color.DarkGray;
             this.DrawingTools.Controls.Add(this.button4);
             this.DrawingTools.Controls.Add(this.button3);
             this.DrawingTools.Controls.Add(this.button2);
@@ -95,7 +95,7 @@ namespace DrawingToolkit
             // 
             // button4
             // 
-            this.button4.BackColor = System.Drawing.Color.Red;
+            this.button4.BackColor = System.Drawing.Color.White;
             this.button4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button4.Image = global::DrawingToolkit.Properties.Resources.icons8_redo_64;
             this.button4.Location = new System.Drawing.Point(321, 27);
@@ -108,7 +108,7 @@ namespace DrawingToolkit
             // 
             // button3
             // 
-            this.button3.BackColor = System.Drawing.Color.Red;
+            this.button3.BackColor = System.Drawing.Color.White;
             this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button3.Image = global::DrawingToolkit.Properties.Resources.icons8_undo_64;
             this.button3.Location = new System.Drawing.Point(260, 26);
@@ -121,7 +121,7 @@ namespace DrawingToolkit
             // 
             // button2
             // 
-            this.button2.BackColor = System.Drawing.Color.Red;
+            this.button2.BackColor = System.Drawing.Color.White;
             this.button2.BackgroundImage = global::DrawingToolkit.Properties.Resources.icons8_cursor_64__1_;
             this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button2.Location = new System.Drawing.Point(196, 27);
@@ -134,7 +134,7 @@ namespace DrawingToolkit
             // 
             // button1
             // 
-            this.button1.BackColor = System.Drawing.Color.Red;
+            this.button1.BackColor = System.Drawing.Color.Transparent;
             this.button1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.button1.Image = global::DrawingToolkit.Properties.Resources.icons8_erase_50;
             this.button1.Location = new System.Drawing.Point(1053, 18);
@@ -147,7 +147,7 @@ namespace DrawingToolkit
             // 
             // RectangleTool
             // 
-            this.RectangleTool.BackColor = System.Drawing.Color.Red;
+            this.RectangleTool.BackColor = System.Drawing.Color.White;
             this.RectangleTool.BackgroundImage = global::DrawingToolkit.Properties.Resources.icons8_rectangular_80;
             this.RectangleTool.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.RectangleTool.Image = global::DrawingToolkit.Properties.Resources.icons8_rectangular_80;
@@ -181,9 +181,8 @@ namespace DrawingToolkit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Red;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(1157, 741);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(1160, 741);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.DrawingTools);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
