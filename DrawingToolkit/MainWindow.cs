@@ -17,6 +17,7 @@ namespace DrawingToolkit
         public bool draw = false;
         public bool select = false;
         public bool undo = false;
+        public int ClickPosition = -1;
 
         public int currentDrawingTool = 1;
         DrawingObject selectedObject;
@@ -31,7 +32,7 @@ namespace DrawingToolkit
         public Point point3 = new Point();
         public Point point4 = new Point();
 
-        public Pen pen = new Pen(Color.Black, 3);
+        public Pen pen = new Pen(Color.Black, 2);
         public Graphics graphics;
 
         List<DrawingObject> _objects = new List<DrawingObject>();
@@ -107,18 +108,48 @@ namespace DrawingToolkit
                         selectedObject = obj;
                         selectedObject.RenderOnPreview(graphics, 2);
                         selectedObject.DrawHandle(graphics);
+                        ClickPosition = selectedObject.GetClickHandle(e.Location);
+                        System.Diagnostics.Debug.WriteLine(ClickPosition);
                     }
                     else
                     {
+                        selectedObject = null;
                         obj.RenderOnPreview(graphics, 1);
                     }
                 }
             }
         }
 
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            point2 = e.Location;
+            
+        }
+
         private void panel1_MouseUp(object sender, MouseEventArgs e)
         {
             draw = false;
+            if (selectedObject != null && select == true && draw == false)
+            {
+                if (ClickPosition != -1)
+                {
+                    selectedObject.Resize(ClickPosition, e.Location);
+                    System.Diagnostics.Debug.WriteLine("RESIZING");
+                    selectedObject.DrawObject(graphics);
+                    selectedObject.RenderOnPreview(graphics, 2);
+                    selectedObject.DrawHandle(graphics);
+                }
+                else
+                {
+                    selectedObject.Translate(e.X - oldPoint.X, e.Y - oldPoint.Y);
+                    System.Diagnostics.Debug.WriteLine("TRANSLATING");
+                    panel1.Refresh();
+                    oldPoint = e.Location;
+                    selectedObject.DrawObject(graphics);
+                    selectedObject.RenderOnPreview(graphics, 2);
+                    selectedObject.DrawHandle(graphics);
+                }
+            }
         }
 
 
@@ -227,19 +258,6 @@ namespace DrawingToolkit
                 
             }
         }
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                
-            }
-        }
-
-        private void panel1_MouseMove(object sender, MouseEventArgs e)
-        {
-            point2 = e.Location;
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             _objects.Clear();

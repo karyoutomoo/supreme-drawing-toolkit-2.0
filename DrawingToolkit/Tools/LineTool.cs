@@ -15,7 +15,7 @@ namespace DrawingToolkit.Tools
         private const double EPSILON = 3.0;
         public Point point2 { get; set; }
         public Point point1 { get; set; }
-        private Pen pen = new Pen(Color.Black, 3);
+        private Pen pen = new Pen(Color.Black, 2);
 
         public Line(Point point2, Point point1)
         {

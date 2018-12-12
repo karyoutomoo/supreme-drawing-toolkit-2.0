@@ -13,7 +13,7 @@ namespace DrawingToolkit.Tools
     class Ellipse : DrawingObject
     {
         private const double EPSILON = 3.0;
-        public Pen pen = new Pen(Color.Black, 3);
+        public Pen pen = new Pen(Color.Black, 2);
         public Point point1 { get; set; }
         public Point point2 { get; set; }
         public int Width { get; set; }
