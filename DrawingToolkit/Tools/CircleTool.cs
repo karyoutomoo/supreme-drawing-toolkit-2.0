@@ -84,7 +84,26 @@ namespace DrawingToolkit.Tools
 
         public override Point GetHandlePoint(int value)
         {
-            throw new NotImplementedException();
+            //System.Diagnostics.Debug.WriteLine(from);
+            Point result = Point.Empty;
+            if (value == 1)//pojok kiri
+                result = new Point(point1.X, point1.Y);
+            else if (value == 2)//tengah kiri
+                result = new Point(point1.X, point1.Y + (Height / 2));
+            else if (value == 3)//bawah kiri
+                result = new Point(point1.X, point2.Y);
+            else if (value == 4)
+                result = new Point(point1.X + (Width / 2), point1.Y);
+            else if (value == 5)
+                result = new Point(point1.X + (Width / 2), point2.Y);
+            else if (value == 6)
+                result = new Point(point2.X, point1.Y);
+            else if (value == 7)
+                result = new Point(point2.X, point1.Y + (Height / 2));
+            else if (value == 8)
+                result = new Point(point2.X, point2.Y);
+            System.Diagnostics.Debug.WriteLine("GetHandlePoint");
+            return result;
         }
 
         public override int GetClickHandle(Point posisi)

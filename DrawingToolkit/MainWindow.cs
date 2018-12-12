@@ -98,12 +98,15 @@ namespace DrawingToolkit
 
             if (select == true)
             {
+                panel1.Invalidate();
+                Refresh();
                 foreach (DrawingObject obj in _objects)
                 {
                     if (obj.Intersect(e.X, e.Y))
                     {
                         selectedObject = obj;
                         selectedObject.RenderOnPreview(graphics, 2);
+                        selectedObject.DrawHandle(graphics);
                     }
                     else
                     {
@@ -111,8 +114,6 @@ namespace DrawingToolkit
                     }
                 }
             }
-            panel1.Invalidate();
-            Refresh();
         }
 
         private void panel1_MouseUp(object sender, MouseEventArgs e)
