@@ -93,6 +93,10 @@ namespace DrawingToolkit
             oldPoint = e.Location;
             if (e.Button == MouseButtons.Left)
             {
+                if (selectedObject != null && select == true && ClickPosition == -1)
+                {
+                    selectedObject.DrawObject(graphics);
+                }
                 draw = true;
                 loop++;
             }
@@ -119,12 +123,16 @@ namespace DrawingToolkit
                         obj.RenderOnPreview(graphics, 1);
                     }
                 }
-            }
+            }else Cursor = Cursors.Default;
         }
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
             point2 = e.Location;
+            if (selectedObject != null && select == true && ClickPosition == -1)
+            {
+                selectedObject.DrawObject(graphics);
+            }
         }
 
         private void panel1_MouseUp(object sender, MouseEventArgs e)
